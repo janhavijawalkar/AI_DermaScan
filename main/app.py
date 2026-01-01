@@ -6,18 +6,14 @@ from backend import process_image
 from datetime import datetime
 import time
 
-# =========================================================
 # PAGE CONFIG
-# =========================================================
 st.set_page_config(
     page_title="DermalScan",
     page_icon="🧴",
     layout="wide"
 )
 
-# =========================================================
-# CSS (FIX VISIBILITY + CLEAN UI)
-# =========================================================
+# CSS 
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
@@ -78,18 +74,14 @@ html, body, [data-testid="stAppViewContainer"] {
 </style>
 """, unsafe_allow_html=True)
 
-# =========================================================
 # HEADER
-# =========================================================
 st.markdown("<div class='main-title'>🧴 DermalScan</div>", unsafe_allow_html=True)
 st.markdown(
     "<div class='subtitle'>AI-Powered Facial Skin Condition Analysis</div>",
     unsafe_allow_html=True
 )
 
-# =========================================================
-# IMAGE RESIZE FOR UI (SLIGHTLY BIGGER)
-# =========================================================
+# IMAGE RESIZE
 def resize_for_ui(image, max_height=820):
     h, w = image.shape[:2]
     if h > max_height:
@@ -99,9 +91,7 @@ def resize_for_ui(image, max_height=820):
         image = cv2.resize(image, (new_w, new_h))
     return image
 
-# =========================================================
 # FILE UPLOAD
-# =========================================================
 uploaded = st.file_uploader(
     "Upload a facial image",
     type=["jpg", "jpeg", "png"]
@@ -144,9 +134,8 @@ if uploaded:
 
         st.markdown("</div>", unsafe_allow_html=True)
 
-    # =================================================
+    
     # RESULTS
-    # =================================================
     if results and len(results) > 0:
         r = results[0]
 

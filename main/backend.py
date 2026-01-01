@@ -1,13 +1,12 @@
-# backend.py
 import cv2
 import numpy as np
 import time
 from tensorflow.keras.models import load_model
 from tensorflow.keras.applications.efficientnet import preprocess_input
 
-# -------------------------------------------------
+
 # Load trained model
-# -------------------------------------------------
+
 model = load_model(
     r"C:\Users\user\OneDrive\Desktop\DermalScan\main\best_balanced1_noaug.keras"
 )
@@ -20,9 +19,9 @@ face_cascade = cv2.CascadeClassifier(
     cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
 )
 
-# -------------------------------------------------
-# Dynamic label drawing (FIXED & RESPONSIVE)
-# -------------------------------------------------
+
+# Dynamic label 
+
 def draw_label(img, text, confidence):
     h, w = img.shape[:2]
 
@@ -44,7 +43,7 @@ def draw_label(img, text, confidence):
         (x, y),
         font,
         font_scale,
-        (0, 255, 0),   # clean professional green
+        (0, 255, 0),   
         thickness,
         cv2.LINE_AA
     )
@@ -52,17 +51,17 @@ def draw_label(img, text, confidence):
     return img
 
 
-# -------------------------------------------------
+
 # Preprocess face
-# -------------------------------------------------
+
 def preprocess_face(face_img):
     face_resized = cv2.resize(face_img, (224, 224))
     face_input = preprocess_input(face_resized.astype(np.float32))
     return np.expand_dims(face_input, axis=0)
 
-# -------------------------------------------------
+
 # Prediction
-# -------------------------------------------------
+
 def predict_skin_condition(face_img):
     processed = preprocess_face(face_img)
     preds = model.predict(processed, verbose=0)[0]
@@ -76,9 +75,9 @@ def predict_skin_condition(face_img):
         }
     }
 
-# -------------------------------------------------
+
 # Main pipeline
-# -------------------------------------------------
+
 def process_image(img):
     start_time = time.time()
 
@@ -93,9 +92,9 @@ def process_image(img):
     annotated_img = img.copy()
     results = []
 
-    # ---------------------------------------------
+    
     # CASE 1: No face detected
-    # ---------------------------------------------
+    
     if len(faces) == 0:
         output = predict_skin_condition(img)
         annotated_img = draw_label(
@@ -105,9 +104,9 @@ def process_image(img):
         )
         results.append(output)
 
-    # ---------------------------------------------
+    
     # CASE 2: Face(s) detected
-    # ---------------------------------------------
+    
     else:
         for (x, y, w, h) in faces:
             face_img = img[y:y+h, x:x+w]
