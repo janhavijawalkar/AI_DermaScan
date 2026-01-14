@@ -4,6 +4,7 @@ DermalScan is a deep learning–based web application that detects and classifie
 The system integrates face detection, image preprocessing, classification, confidence visualization, and a user-friendly web interface.
 
 📌 Project Overview:
+
 The goal of DermalScan is to automate facial skin aging analysis using Artificial Intelligence.
 Users can upload or capture a facial image, and the system will:
 
