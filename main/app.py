@@ -6,249 +6,208 @@ from backend import process_image
 from datetime import datetime
 import time
 
-# PAGE CONFIG
+#  PAGE CONFIG 
 st.set_page_config(
     page_title="DermalScan",
     page_icon="🧴",
     layout="wide"
 )
 
-# CSS 
+#  APPLE-STYLE CSS 
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
+/* Background */
 html, body, [data-testid="stAppViewContainer"] {
-    background: linear-gradient(135deg, #1b1f4b, #2c2f6c);
-    font-family: 'Poppins', sans-serif;
+    background: radial-gradient(circle at top, #1f2a55, #0b1025);
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+                 Arial, sans-serif;
 }
 
-/* Titles */
+/* Header */
 .main-title {
     text-align: center;
     font-size: 44px;
     font-weight: 700;
-    color: #ffffff;
+    color: white;
 }
-
 .subtitle {
     text-align: center;
-    font-size: 17px;
+    font-size: 18px;
     color: #c7d2fe;
-    margin-bottom: 30px;
+    margin-bottom: 35px;
 }
 
-/* Cards */
-.card {
+/* Apple-style card */
+.apple-card {
     background: rgba(255,255,255,0.12);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 25px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+    backdrop-filter: blur(18px);
+    border-radius: 22px;
+    padding: 24px;
+    margin-bottom: 28px;
+    border: 1px solid rgba(255,255,255,0.18);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
 }
 
-/* Section headers */
-.section-title {
-    color: #ffffff;
+/* Titles */
+.apple-title {
     font-size: 22px;
     font-weight: 600;
-    margin-bottom: 15px;
+    color: white;
+    margin-bottom: 14px;
 }
 
-/* Probability text */
-.prob-text {
-    color: #e0f2fe;
-    font-size: 18px;
-    font-weight: 500;
+/* Text */
+.apple-text {
+    color: #e5e7eb;
+    font-size: 17px;
 }
 
-/* Fix metric colors if used */
-[data-testid="stMetricLabel"] {
-    color: #c7d2fe !important;
-}
-[data-testid="stMetricValue"] {
-    color: #ffffff !important;
+/* Badge */
+.apple-badge {
+    display: inline-block;
+    padding: 10px 16px;
+    border-radius: 16px;
+    background: rgba(255,255,255,0.2);
+    color: white;
     font-weight: 600;
+    font-size: 18px;
 }
+
+/* Confidence pill */
+.apple-pill {
+    margin-top: 12px;
+    padding: 10px 18px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #4f8cff, #7aa7ff);
+    color: white;
+    font-weight: 600;
+    display: inline-block;
+}
+
+/* FORCE WIDGET TEXT WHITE */
+[data-testid="stRadio"] *,
+[data-testid="stFileUploader"] *,
+[data-testid="stCameraInput"] *,
+label {
+    color: white !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
-# HEADER
+#  HEADER 
 st.markdown("<div class='main-title'>🧴 DermalScan</div>", unsafe_allow_html=True)
 st.markdown(
     "<div class='subtitle'>AI-Powered Facial Skin Condition Analysis</div>",
     unsafe_allow_html=True
 )
 
-# IMAGE RESIZE
-def resize_for_ui(image, max_height=820):
-    h, w = image.shape[:2]
-    if h > max_height:
-        scale = max_height / h
-        new_w = int(w * scale)
-        new_h = int(h * scale)
-        image = cv2.resize(image, (new_w, new_h))
-    return image
+#  INPUT SOURCE 
+st.markdown("<div class='apple-card'>", unsafe_allow_html=True)
+st.markdown("<div class='apple-title'>📸 Choose Input Source</div>", unsafe_allow_html=True)
 
-# FILE UPLOAD
-uploaded = st.file_uploader(
-    "Upload a facial image",
-    type=["jpg", "jpeg", "png"]
+source = st.radio(
+    "Select image source",
+    ["Upload Image", "Use Live Camera"],
+    horizontal=True
 )
 
-if uploaded:
-    file_bytes = np.frombuffer(uploaded.read(), np.uint8)
-    img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+st.markdown("</div>", unsafe_allow_html=True)
+
+img = None
+
+#  UPLOAD IMAGE 
+if source == "Upload Image":
+    uploaded = st.file_uploader(
+        "Upload a facial image",
+        type=["jpg", "jpeg", "png"]
+    )
+
+    if uploaded:
+        file_bytes = np.frombuffer(uploaded.read(), np.uint8)
+        img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+
+#  LIVE CAMERA
+else:
+    camera_img = st.camera_input("Capture image using camera")
+    if camera_img:
+        file_bytes = np.frombuffer(camera_img.getvalue(), np.uint8)
+        img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+
+# PROCESS IMAGE 
+if img is not None:
 
     col1, col2 = st.columns(2)
 
-    # ---------------- ORIGINAL IMAGE ----------------
+    # ORIGINAL IMAGE
     with col1:
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.markdown("<div class='section-title'>Uploaded Image</div>", unsafe_allow_html=True)
-
-        ui_img = resize_for_ui(img)
-
-        st.markdown("<div style='display:flex; justify-content:center;'>", unsafe_allow_html=True)
-        st.image(cv2.cvtColor(ui_img, cv2.COLOR_BGR2RGB))
+        st.markdown("<div class='apple-card'>", unsafe_allow_html=True)
+        st.markdown("<div class='apple-title'>Input Image</div>", unsafe_allow_html=True)
+        st.image(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
         st.markdown("</div>", unsafe_allow_html=True)
 
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    # ---------------- PROCESS IMAGE ----------------
+    # MODEL PROCESSING
     start_time = time.time()
     annotated_img, results = process_image(img)
     processing_time = time.time() - start_time
 
-    # ---------------- ANNOTATED IMAGE ----------------
+    # OUTPUT IMAGE
     with col2:
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.markdown("<div class='section-title'>Annotated Output</div>", unsafe_allow_html=True)
-
-        ui_annotated = resize_for_ui(annotated_img)
-
-        st.markdown("<div style='display:flex; justify-content:center;'>", unsafe_allow_html=True)
-        st.image(cv2.cvtColor(ui_annotated, cv2.COLOR_BGR2RGB))
+        st.markdown("<div class='apple-card'>", unsafe_allow_html=True)
+        st.markdown("<div class='apple-title'>Analysis Output</div>", unsafe_allow_html=True)
+        st.image(cv2.cvtColor(annotated_img, cv2.COLOR_BGR2RGB))
         st.markdown("</div>", unsafe_allow_html=True)
 
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    
     # RESULTS
-    if results and len(results) > 0:
+    if results:
         r = results[0]
 
-        # ---------------- DETECTED CONDITION ----------------
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.markdown("<div class='section-title'>Detected Skin Condition</div>", unsafe_allow_html=True)
+        # CONDITION
+        st.markdown("<div class='apple-card'>", unsafe_allow_html=True)
+        st.markdown("<div class='apple-title'>Detected Skin Condition</div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='apple-badge'>🧴 {r['label']}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='apple-pill'>Confidence: {r['confidence']:.2f}%</div>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
-        st.markdown(
-            f"""
-            <div style="
-                background: rgba(0,0,0,0.35);
-                padding: 16px;
-                border-radius: 12px;
-                color: #ffffff;
-                font-size: 20px;
-                font-weight: 600;
-            ">
-                🧴 {r['label']}
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+        # PROBABILITIES
+        st.markdown("<div class='apple-card'>", unsafe_allow_html=True)
+        st.markdown("<div class='apple-title'>Probability Distribution</div>", unsafe_allow_html=True)
 
-        st.markdown(
-            f"""
-            <div style="
-                margin-top: 12px;
-                background: rgba(255,255,255,0.12);
-                padding: 14px;
-                border-radius: 12px;
-                color: #ffffff;
-                font-size: 18px;
-            ">
-                📊 Confidence: <b>{r['confidence']:.2f}%</b>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+        for k, v in r["probabilities"].items():
+            st.markdown(f"<div class='apple-text'><b>{k}</b>: {v:.1f}%</div>", unsafe_allow_html=True)
 
         st.markdown("</div>", unsafe_allow_html=True)
 
-        # ---------------- PROBABILITY DISTRIBUTION ----------------
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.markdown("<div class='section-title'>📈 Probability Distribution</div>", unsafe_allow_html=True)
-
-        probs = r.get("probabilities", {})
-
-        pcol1, pcol2 = st.columns(2)
-        items = list(probs.items())
-
-        for i, (name, val) in enumerate(items):
-            block = f"<div class='prob-text'><b>{name}</b>: {val:.1f}%</div>"
-            if i % 2 == 0:
-                pcol1.markdown(block, unsafe_allow_html=True)
-            else:
-                pcol2.markdown(block, unsafe_allow_html=True)
-
+        # PROCESSING TIME
+        st.markdown("<div class='apple-card'>", unsafe_allow_html=True)
+        st.markdown("<div class='apple-title'>Processing Time</div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='apple-text'>⏱ {processing_time:.2f} seconds</div>", unsafe_allow_html=True)
         st.markdown("</div>", unsafe_allow_html=True)
 
-        # ---------------- PROCESSING TIME ----------------
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.markdown("<div class='section-title'>⏱ Processing Time</div>", unsafe_allow_html=True)
+        # DOWNLOAD
+        st.markdown("<div class='apple-card'>", unsafe_allow_html=True)
+        st.markdown("<div class='apple-title'>Download Results</div>", unsafe_allow_html=True)
 
-        st.markdown(
-            f"""
-            <div style="
-                background: rgba(0,0,0,0.35);
-                padding: 16px;
-                border-radius: 12px;
-                color: #ffffff;
-                font-size: 18px;
-                font-weight: 500;
-                text-align: center;
-            ">
-                Image analyzed in <b>{processing_time:.2f} seconds</b>
-            </div>
-            """,
-            unsafe_allow_html=True
+        df = pd.DataFrame(results)
+        df["probabilities"] = df["probabilities"].apply(str)
+
+        st.download_button(
+            "📄 Download CSV Report",
+            df.to_csv(index=False).encode("utf-8"),
+            file_name=f"dermalscan_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+            mime="text/csv"
+        )
+
+        _, png_img = cv2.imencode(".png", annotated_img)
+        st.download_button(
+            "🖼 Download Annotated Image",
+            png_img.tobytes(),
+            file_name=f"dermalscan_result.png",
+            mime="image/png"
         )
 
         st.markdown("</div>", unsafe_allow_html=True)
-
-        # ---------------- DOWNLOAD SECTION ----------------
-        st.markdown("<div class='card'>", unsafe_allow_html=True)
-        st.markdown("<div class='section-title'>⬇ Download Results</div>", unsafe_allow_html=True)
-
-        dcol1, dcol2 = st.columns(2)
-
-        with dcol1:
-            df = pd.DataFrame(results)
-            df["probabilities"] = df["probabilities"].apply(str)
-            csv_bytes = df.to_csv(index=False).encode("utf-8")
-
-            st.download_button(
-                label="📄 Download CSV Report",
-                data=csv_bytes,
-                file_name=f"dermalscan_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
-                mime="text/csv"
-            )
-
-        with dcol2:
-            _, png_img = cv2.imencode(".png", annotated_img)
-            st.download_button(
-                label="🖼 Download Annotated Image",
-                data=png_img.tobytes(),
-                file_name=f"dermalscan_result_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png",
-                mime="image/png"
-            )
-
-        st.markdown("</div>", unsafe_allow_html=True)
-
-    else:
-        st.warning("No face detected. Please upload a clear facial image.")
 
 else:
-    st.info("⬆ Upload an image to start analysis")
+    st.info("⬆ Please upload or capture an image to start analysis")
