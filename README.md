@@ -3,8 +3,7 @@
 DermalScan is a deep learning–based web application that detects and classifies facial skin aging conditions such as Wrinkles, Dark Spots, Puffy Eyes, and Clear Skin using a pretrained EfficientNetB0 model.
 The system integrates face detection, image preprocessing, classification, confidence visualization, and a user-friendly web interface.
 
-📌 Project Overview
-
+📌 Project Overview:
 The goal of DermalScan is to automate facial skin aging analysis using Artificial Intelligence.
 Users can upload or capture a facial image, and the system will:
 
@@ -18,7 +17,7 @@ Show annotated output images
 
 Allow result downloads
 
-🧠 Problem Statement
+🧠 Problem Statement:
 
 The objective is to develop a deep learning–based system that can detect and classify facial aging signs—such as wrinkles, dark spots, puffy eyes, and clear skin—using a pretrained EfficientNetB0 model.
 
@@ -32,7 +31,7 @@ Skin condition classification with percentage confidence
 
 A web-based frontend to visualize results with annotated bounding boxes and labels
 
-📂 Dataset Description
+📂 Dataset Description:
 
 Source: Kaggle
 
@@ -46,7 +45,7 @@ Puffy Eyes
 
 Clear Skin
 
-📊 Dataset Preparation
+📊 Dataset Preparation:
 
 Initial dataset contained ~300 images per class
 
@@ -60,6 +59,7 @@ Final balanced dataset contained 409 images per class
 🔗 Dataset Link
 
 👉 📥 Download Dataset from Google Drive
+https://drive.google.com/drive/folders/1oDO54S6tc-GX5w61X9AvWG-z8dgvZoKy?usp=sharing
 
 🧩 Project Modules (End-to-End Workflow)
 🔹 Module 1: Data Collection & Cleaning
