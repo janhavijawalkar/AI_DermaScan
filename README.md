@@ -162,7 +162,12 @@ Processing time display
 
 Download results (CSV & annotated image)
 
-<img width="1884" height="781" alt="UI Screenshot 1" src="https://github.com/user-attachments/assets/5d97a864-361c-48d8-a5ff-b96b2f00455b" /> <img width="1620" height="779" alt="UI Screenshot 2" src="https://github.com/user-attachments/assets/929b57b6-964c-47de-ac1f-cfaed33771b8" /> <img width="1795" height="835" alt="UI Screenshot 3" src="https://github.com/user-attachments/assets/8950b9a8-45e6-406b-9cff-2bc53104251e" />
+<img width="1914" height="794" alt="Screenshot 2026-01-14 211732" src="https://github.com/user-attachments/assets/c96d101a-5c5f-4889-87e8-69f9cdc111f1" />
+<img width="1891" height="828" alt="Screenshot 2026-01-14 211906" src="https://github.com/user-attachments/assets/9e3cda78-060a-471a-a957-e181143b8d3e" />
+<img width="1900" height="836" alt="Screenshot 2026-01-14 211947" src="https://github.com/user-attachments/assets/d1953dc1-4441-42ef-8273-dcd2298ab09f" />
+
+
+
 🖥️ Technologies Used
 
 Programming Language: Python
