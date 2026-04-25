@@ -225,10 +225,10 @@ Mobile application integration
 🔗 Project Links
 
 GitHub Repository:
-👉 https://github.com/janhavijawalkar/AI_DermaScan
+https://github.com/janhavijawalkar/AI_DermaScan
 
 Dataset Link:
-👉 https://drive.google.com/drive/folders/1oDO54S6tc-GX5w61X9AvWG-z8dgvZoKy?usp=sharing
+https://drive.google.com/drive/folders/1oDO54S6tc-GX5w61X9AvWG-z8dgvZoKy?usp=sharing
 
 👩‍🎓 Author
 
